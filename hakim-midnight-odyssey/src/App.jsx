@@ -1,8 +1,23 @@
-import React from 'react';
-import BiodataDiri from './BiodataDiri';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './Home';
 
-function App() {
-  return <BiodataDiri />;
+// Perhatikan huruf "T" besar menyesuaikan nama folder lu
+import BiodataDiri from './Tugas2/BiodataDiri'; 
+import PendaftaranEsports from './Tugas3/PendaftaranEsports'; 
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Rute Halaman Utama (Dashboard) */}
+        <Route path="/" element={<Home />} />
+        
+        {/* Rute Modul 2 */}
+        <Route path="/tugas2" element={<BiodataDiri />} />
+        
+        {/* Rute Modul 3 */}
+        <Route path="/tugas3" element={<PendaftaranEsports />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App;

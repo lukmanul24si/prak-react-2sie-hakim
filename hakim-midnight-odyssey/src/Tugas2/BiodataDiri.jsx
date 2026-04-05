@@ -1,9 +1,8 @@
-import React from 'react';
-import './custom.css';
+import React from "react";
+import "../custom.css"; 
 
 // Mengimpor file gambar untuk foto profil
-import fotoProfil from './assets/foto_hakim.jpg'; 
-
+import fotoProfil from "../assets/foto_hakim.jpg"; 
 // --- CHILD COMPONENTS ---
 
 const Header = () => (
