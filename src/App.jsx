@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from "react-router-dom";
+import Header from "./layouts/Header";
+import Sidebar from "./layouts/Sidebar";
+import Dashboard from "./pages/Dashboard";
+import Orders from "./pages/Orders";
+import Customers from "./pages/Customers";
+import ErrorPage from "./pages/ErrorPage"; // Import komponen ErrorPage yang fleksibel
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex min-h-screen"> 
+      {/* 1. Sidebar tetap di kiri */}
+      <Sidebar />
+      
+      <div className="flex-1 bg-gray-50 flex flex-col">
+        {/* 2. Header di atas */}
+        <Header />
+        
+        {/* 3. Area Konten Utama */}
+        <main className="p-6 flex-1">
+          <Routes>
+            {/* Route Utama */}
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/customers" element={<Customers />} />
+
+            {/* Route Latihan Error (Sesuai tugas di gambar):
+                Nanti di Sidebar, arahkan Link ke path di bawah ini.
+            */}
+            <Route 
+              path="/error-400" 
+              element={<ErrorPage code="400" title="Bad Request" message="Permintaan tidak valid, periksa kembali inputan Anda." />} 
+            />
+            <Route 
+              path="/error-401" 
+              element={<ErrorPage code="401" title="Unauthorized" message="Maaf, Anda tidak memiliki izin untuk mengakses halaman ini." />} 
+            />
+            <Route 
+              path="/error-403" 
+              element={<ErrorPage code="403" title="Forbidden" message="Akses ditolak secara permanen oleh sistem." />} 
+            />
+            
+            {/* Route 404 (Fallback):
+                Jika user mengetik URL sembarang (seperti /sekolah di gambarmu), 
+                maka akan otomatis lari ke sini.
+            */}
+            <Route 
+              path="*" 
+              element={<ErrorPage code="404" title="Not Found" message="Halaman yang Anda cari tidak ditemukan atau telah dipindahkan." />} 
+            />
+          </Routes>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
