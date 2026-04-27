@@ -7,10 +7,12 @@ import "./tailwind.css";
 // Import komponen utama yang sudah kita buat
 import FrameworkListSearchFilter from "./FrameworkListSearchFilter";
 import FrameworkList from "./FrameworkList";
+import ResponsiveDesign from "./ResponsiveDesign";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     {/* <FrameworkList /> */}
     <FrameworkListSearchFilter />
+    <ResponsiveDesign />
   </StrictMode>
 );

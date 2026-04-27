@@ -3,8 +3,24 @@ import frameworkData from "./framework.json";
 
 export default function FrameworkListSearchFilter() {
     /* Deklarasi state */
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedTag, setSelectedTag] = useState("");
+    //const [searchTerm, setSearchTerm] = useState("");
+    //const [selectedTag, setSelectedTag] = useState("");
+
+    /*Inisialisasi DataForm*/
+		const [dataForm, setDataForm] = useState({
+			searchTerm: "",
+			selectedTag: "",
+			/*Tambah state lain beserta default value*/
+			});
+		
+		/*Inisialisasi Handle perubahan nilai input form*/
+		const handleChange = (evt) => {
+			const { name, value } = evt.target;
+			setDataForm({
+				...dataForm,
+				[name]: value,
+			});
+		};
 
     /* Logic filter */
     const _searchTerm = searchTerm.toLowerCase();
@@ -45,7 +61,7 @@ export default function FrameworkListSearchFilter() {
                     name="searchTerm"
                     placeholder="Search framework by name or description..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} 
+                    onChange={handleChange}
                     className="w-full md:w-2/3 p-3.5 border border-gray-200 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                 />
 
@@ -53,7 +69,7 @@ export default function FrameworkListSearchFilter() {
                 <select
                     name="selectedTag"
                     value={selectedTag}
-                    onChange={(e) => setSelectedTag(e.target.value)}
+                    onChange={handleChange}
                     className="w-full md:w-1/3 p-3.5 border border-gray-200 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all cursor-pointer text-gray-700"
                 >
                     <option value="">All Tags</option>

@@ -1,5 +1,5 @@
 import React from "react";
-import PageHeader from "../components/pageHeader";
+import PageHeader from "../../components/pageHeader";
 
 const Customers = () => {
   // Generate 30 data JSON sesuai atribut modul
