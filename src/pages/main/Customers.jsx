@@ -1,10 +1,13 @@
 import React from "react";
 import PageHeader from "../../components/pageHeader";
+// TAMBAHAN: Import Link
+import { Link } from "react-router-dom"; 
 
 const Customers = () => {
-  // Generate 30 data JSON sesuai atribut modul
   const customersData = Array.from({ length: 30 }, (_, i) => ({
-    id: `CUST-${2000 + i}`,
+    // Kita buat ID numerik di belakang agar bisa dipakai untuk API dummyjson (1-30)
+    id: i + 1, 
+    displayId: `CUST-${2000 + i}`,
     customerName: ["Lukmanul Hakim", "Budi Santoso", "Siti Aminah", "Andi Wijaya", "Rina Rose"][i % 5],
     email: `user${i}@example.com`,
     phone: `0812345678${i.toString().padStart(2, '0')}`,
@@ -13,9 +16,7 @@ const Customers = () => {
 
   return (
     <div className="p-4">
-      {/* PageHeader dengan 3 Props: title, breadcrumb, dan children */}
       <PageHeader title="Customers" breadcrumb="Dashboard / Customers">
-         {/* Children: Badge info total (Contoh penggunaan children lain) */}
          <span className="hidden sm:inline-block bg-blue-100 text-blue-600 text-xs font-bold px-3 py-1 rounded-full">
             Total: 30 Users
          </span>
@@ -35,7 +36,15 @@ const Customers = () => {
           <tbody>
             {customersData.map((cust) => (
               <tr key={cust.id} className="border-b hover:bg-gray-50 transition-colors">
-                <td className="p-4 text-green-600 font-bold">{cust.id}</td>
+                {/* UBAH DI SINI: Menambahkan Link sesuai Gambar 2 modul */}
+                <td className="p-4">
+                  <Link 
+                    to={`/products/${cust.id}`} 
+                    className="text-green-600 font-bold hover:text-green-800 underline decoration-dotted"
+                  >
+                    {cust.displayId}
+                  </Link>
+                </td>
                 <td className="p-4 font-medium">{cust.customerName}</td>
                 <td className="p-4 text-gray-600">{cust.email}</td>
                 <td className="p-4 text-gray-600">{cust.phone}</td>

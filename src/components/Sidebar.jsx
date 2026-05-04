@@ -31,6 +31,11 @@ const Sidebar = () => {
         <span>Customers</span>
       </NavLink>
 
+      <NavLink to="/products/1" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
+        <MdShoppingCart size={20} />
+        <span>Products</span>
+      </NavLink>
+
       {/* Bagian Latihan Error (Sesuai Instruksi Tugas) */}
       <div className="mt-6">
         <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
