@@ -10,6 +10,7 @@ const Dashboard = React.lazy(() => import("./pages/main/Dashboard"));
 const Orders = React.lazy(() => import("./pages/main/Orders"));
 const Customers = React.lazy(() => import("./pages/main/Customers"));
 const ErrorPage = React.lazy(() => import("./pages/main/ErrorPage"));
+const Components = React.lazy(() => import("./pages/main/Components"));
 
 // HANYA INI YANG DIPAKAI (Karena file ini yang ada di folder kamu)
 const ProductDetail = React.lazy(() => import("./pages/main/ProductDetail"));
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/customers" element={<Customers />} />
+          <Route path="/components" element={<Components />} />
 
           {/* Gunakan ID dinamis untuk Product Detail sesuai modul */}
           <Route path="/products/:id" element={<ProductDetail />} />

@@ -31,6 +31,11 @@ const Sidebar = () => {
         <span>Customers</span>
       </NavLink>
 
+      <NavLink to="/components" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
+        <MdPeople size={20} />
+        <span>Components</span>
+      </NavLink>
+
       <NavLink to="/products/1" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
         <MdShoppingCart size={20} />
         <span>Products</span>
