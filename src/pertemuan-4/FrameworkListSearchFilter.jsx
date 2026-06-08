@@ -36,7 +36,7 @@ export default function FrameworkListSearchFilter() {
         return matchesSearch && matchesTag;
     });
 
-    /** Deklarasi pengambilan unique tags di frameworkData **/
+    /** Deklarasi pengambilan unique tasgs di frameworkData **/
     const allTags = [
         ...new Set(frameworkData.flatMap((framework) => framework.tags)),
     ];
