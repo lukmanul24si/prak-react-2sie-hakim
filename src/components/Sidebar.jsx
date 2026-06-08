@@ -1,8 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 // Sesuaikan import icon dengan yang kamu install, biasanya Md atau Fa
-import { MdDashboard, MdShoppingCart, MdPeople, MdErrorOutline, MdFace3 } from "react-icons/md";
+import { MdDashboard, MdShoppingCart, MdPeople, MdErrorOutline, MdFace3, Md4kPlus } from "react-icons/md";
 import FiturXyz from './../pages/main/FiturXyz';
+import Note from './../pages/main/Note';
 
 const Sidebar = () => {
   // Style dasar untuk menu yang sedang aktif
@@ -45,6 +46,11 @@ const Sidebar = () => {
         <NavLink to="/fiturXyz" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
         <MdFace3 size={20} />
         <span>FiturXyz</span>
+      </NavLink>
+
+      <NavLink to="/Note" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
+        <Md4kPlus size={20} />
+        <span>Note</span>
       </NavLink>
 
       {/* Bagian Latihan Error (Sesuai Instruksi Tugas) */}
