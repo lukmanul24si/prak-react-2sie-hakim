@@ -61,7 +61,7 @@ function GenericTable({ columns, data, renderRow }) {
 
 
 // ==========================================
-// KOMPONEN UTAMA: NOTES
+// KOMPONEN UTAMA: NOTESs
 // ==========================================
 
 export default function Notes() {
