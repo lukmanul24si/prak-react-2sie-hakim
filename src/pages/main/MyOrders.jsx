@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
-import PageHeader from "../../components/pageHeader";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
     Table, TableHeader, TableBody, TableRow, TableHead, TableCell
 } from "@/components/ui/table";
 import {
-    Select, SelectTrigger, SelectValue, SelectContent, SelectItem
-} from "@/components/ui/select";
-import {
-    Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription
+    Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
 } from "@/components/ui/dialog";
+import PageHeader from "@/components/pageHeader";
 import { ImSpinner2 } from "react-icons/im";
 import { BsFillExclamationDiamondFill } from "react-icons/bs";
-import { MdDelete, MdVisibility } from "react-icons/md";
+import { MdVisibility } from "react-icons/md";
 
-const Orders = () => {
+export default function MyOrders() {
+    const { user } = useAuth();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -25,38 +24,20 @@ const Orders = () => {
     const [orderItems, setOrderItems] = useState([]);
 
     useEffect(() => {
-        loadOrders();
-    }, []);
+        if (user) loadOrders();
+    }, [user]);
 
     async function loadOrders() {
         setLoading(true);
         setError("");
         const { data, error } = await supabase
             .from("orders")
-            .select("*, profiles(full_name, email)")
+            .select("*")
+            .eq("user_id", user.id)
             .order("created_at", { ascending: false });
 
         if (error) setError(error.message);
         else setOrders(data || []);
-        setLoading(false);
-    }
-
-    async function handleStatusChange(orderId, newStatus) {
-        const { error } = await supabase
-            .from("orders")
-            .update({ status: newStatus })
-            .eq("id", orderId);
-
-        if (error) setError(error.message);
-        else loadOrders();
-    }
-
-    async function handleDelete(id) {
-        if (!confirm("Yakin ingin menghapus pesanan ini?")) return;
-        setLoading(true);
-        const { error } = await supabase.from("orders").delete().eq("id", id);
-        if (error) setError(error.message);
-        else loadOrders();
         setLoading(false);
     }
 
@@ -82,7 +63,7 @@ const Orders = () => {
 
     return (
         <div className="p-4">
-            <PageHeader title="Orders" breadcrumb="Admin / Orders" />
+            <PageHeader title="My Orders" breadcrumb="My Orders" />
 
             {error && (
                 <div className="bg-red-100 mb-4 p-4 text-sm text-red-700 rounded-lg flex items-center gap-2">
@@ -91,24 +72,22 @@ const Orders = () => {
                 </div>
             )}
 
-            <div className="bg-white rounded-xl shadow-md overflow-x-auto border border-gray-100">
+            <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-x-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead className="font-bold">Order #</TableHead>
-                            <TableHead className="font-bold">Customer</TableHead>
                             <TableHead className="font-bold">Status</TableHead>
-                            <TableHead className="font-bold">Subtotal</TableHead>
-                            <TableHead className="font-bold">Discount</TableHead>
                             <TableHead className="font-bold">Total</TableHead>
+                            <TableHead className="font-bold">Points</TableHead>
                             <TableHead className="font-bold">Date</TableHead>
-                            <TableHead className="font-bold text-right">Actions</TableHead>
+                            <TableHead className="font-bold text-right">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {loading && (
                             <TableRow>
-                                <TableCell colSpan={8} className="text-center py-8">
+                                <TableCell colSpan={6} className="text-center py-8">
                                     <ImSpinner2 className="animate-spin text-xl text-green-600 mx-auto" />
                                 </TableCell>
                             </TableRow>
@@ -116,40 +95,27 @@ const Orders = () => {
                         {orders.map((order) => (
                             <TableRow key={order.id}>
                                 <TableCell className="font-medium text-green-600">{order.order_number}</TableCell>
-                                <TableCell>{order.profiles?.full_name || "-"}</TableCell>
                                 <TableCell>
-                                    <Select value={order.status} onValueChange={(val) => handleStatusChange(order.id, val)}>
-                                        <SelectTrigger className="w-[130px]">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="pending">Pending</SelectItem>
-                                            <SelectItem value="processing">Processing</SelectItem>
-                                            <SelectItem value="completed">Completed</SelectItem>
-                                            <SelectItem value="cancelled">Cancelled</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold capitalize ${statusBadge(order.status)}`}>
+                                        {order.status}
+                                    </span>
                                 </TableCell>
-                                <TableCell>Rp {Number(order.subtotal).toLocaleString("id-ID")}</TableCell>
-                                <TableCell>{order.discount_percent}%</TableCell>
                                 <TableCell className="font-semibold">Rp {Number(order.total).toLocaleString("id-ID")}</TableCell>
+                                <TableCell className="text-green-600 font-bold">+{order.points_earned}</TableCell>
                                 <TableCell className="text-gray-500">
                                     {new Date(order.created_at).toLocaleDateString("id-ID")}
                                 </TableCell>
-                                <TableCell className="text-right space-x-2">
+                                <TableCell className="text-right">
                                     <Button variant="outline" size="sm" onClick={() => openDetail(order)}>
                                         <MdVisibility /> Detail
-                                    </Button>
-                                    <Button variant="destructive" size="sm" onClick={() => handleDelete(order.id)}>
-                                        <MdDelete />
                                     </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
                         {!loading && orders.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={8} className="text-center text-gray-400 py-8">
-                                    No orders found.
+                                <TableCell colSpan={6} className="text-center text-gray-400 py-8">
+                                    You haven't placed any orders yet.
                                 </TableCell>
                             </TableRow>
                         )}
@@ -161,18 +127,15 @@ const Orders = () => {
             <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle>Order Detail - {selectedOrder?.order_number}</DialogTitle>
+                        <DialogTitle>Order Detail</DialogTitle>
                         <DialogDescription>
-                            Status: <span className={`px-2 py-0.5 rounded text-xs font-bold capitalize ${statusBadge(selectedOrder?.status)}`}>{selectedOrder?.status}</span>
+                            Order: {selectedOrder?.order_number} | Status:{" "}
+                            <span className={`px-2 py-0.5 rounded text-xs font-bold capitalize ${statusBadge(selectedOrder?.status)}`}>
+                                {selectedOrder?.status}
+                            </span>
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div><span className="text-gray-500">Customer:</span> <b>{selectedOrder?.profiles?.full_name}</b></div>
-                            <div><span className="text-gray-500">Email:</span> {selectedOrder?.profiles?.email}</div>
-                            <div><span className="text-gray-500">Discount:</span> {selectedOrder?.discount_percent}%</div>
-                            <div><span className="text-gray-500">Points Earned:</span> {selectedOrder?.points_earned}</div>
-                        </div>
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -193,8 +156,11 @@ const Orders = () => {
                                 ))}
                             </TableBody>
                         </Table>
-                        <div className="text-right text-lg font-bold">
-                            Total: Rp {Number(selectedOrder?.total || 0).toLocaleString("id-ID")}
+                        <div className="text-right space-y-1 text-sm">
+                            <p>Subtotal: Rp {Number(selectedOrder?.subtotal || 0).toLocaleString("id-ID")}</p>
+                            <p className="text-green-600">Discount: {selectedOrder?.discount_percent}% (-Rp {Number(selectedOrder?.discount_amount || 0).toLocaleString("id-ID")})</p>
+                            <p className="font-bold text-lg">Total: Rp {Number(selectedOrder?.total || 0).toLocaleString("id-ID")}</p>
+                            <p className="text-green-600 font-bold">Points Earned: +{selectedOrder?.points_earned}</p>
                         </div>
                     </div>
                     <DialogFooter>
@@ -204,6 +170,4 @@ const Orders = () => {
             </Dialog>
         </div>
     );
-};
-
-export default Orders;
+}
